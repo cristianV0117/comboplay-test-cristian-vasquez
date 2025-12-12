@@ -9,7 +9,10 @@ use Src\SubscriptionsContext\Subscription\Domain\Repositories\{
     SubscriptionCachePort
 };
 use Src\SubscriptionsContext\Subscription\Domain\Subscription;
-use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\UserId;
+use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\{
+    UserId,
+    SubscriptionStoreCache
+};
 
 final class SubscriptionGetStatusUseCase
 {
@@ -31,10 +34,11 @@ final class SubscriptionGetStatusUseCase
 
 
         if ($subscription->transactionStatus()) {
-            $this->cache->save(userId: $userId, subscriptionData: [
+            $this->cache->save(subscriptionStoreCache: new SubscriptionStoreCache(value: [
+                'user_id' => $userId,
                 'plan_id' => $subscription->entity()['plan_id'],
                 'expires_at' => $subscription->entity()['expires_at']
-            ]);
+            ]));
 
             return $subscription;
         }

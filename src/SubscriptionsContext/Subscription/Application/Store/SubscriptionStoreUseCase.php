@@ -31,7 +31,7 @@ final class SubscriptionStoreUseCase
             'planId' => $planId
         ]));
 
-        if ($subscription) {
+        if ($subscription->transactionStatus()) {
             $this->cache->save(subscriptionStoreCache: new SubscriptionStoreCache(value: [
                 'user_id' => $userId,
                 'plan_id' => $planId,
