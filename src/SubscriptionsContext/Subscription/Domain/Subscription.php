@@ -2,6 +2,7 @@
 
 namespace Src\SubscriptionsContext\Subscription\Domain;
 
+use Illuminate\Support\Carbon;
 use Src\Shared\Domain\Domain;
 
 final class Subscription extends Domain
@@ -39,5 +40,29 @@ final class Subscription extends Domain
     public function expiresAt(): string
     {
         return $this->entity()["expires_at"];
+    }
+
+    public function subscriptionStatus()
+    {
+        if (!$this->ensureIsActive()) {
+            return [
+                "active" => "Su subscripcion esta inactiva",
+                "plan_id" => $this->entity()["plan_id"],
+                "expires_at" => $this->entity()["expires_at"],
+            ];
+        } else {
+            return [
+                "active" => "Su subscripcion esta activa",
+                "plan_id" => $this->entity()["plan_id"],
+                "expires_at" => $this->entity()["expires_at"],
+            ];
+        }
+    }
+
+    private  function ensureIsActive(): bool
+    {
+        $expiresAt = Carbon::parse($this->entity()["expires_at"]);
+
+        return $expiresAt->isFuture();
     }
 }

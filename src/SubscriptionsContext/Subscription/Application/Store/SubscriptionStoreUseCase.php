@@ -31,7 +31,6 @@ final class SubscriptionStoreUseCase
 
         if ($subscription) {
             $this->cache->save(userId: $userId, subscriptionData: [
-                'active' => true,
                 'plan_id' => $planId,
                 'expires_at' => $subscription->expiresAt()
             ]);
