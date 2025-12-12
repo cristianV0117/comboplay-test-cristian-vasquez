@@ -10,6 +10,7 @@ use Src\SubscriptionsContext\Subscription\Domain\Repositories\{
 };
 use Src\SubscriptionsContext\Subscription\Domain\Subscription;
 use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\SubscriptionStore;
+use Src\SubscriptionsContext\Subscription\Domain\Events\SubscriptionCreated;
 
 final class SubscriptionStoreUseCase
 {
@@ -34,6 +35,12 @@ final class SubscriptionStoreUseCase
                 'plan_id' => $planId,
                 'expires_at' => $subscription->expiresAt()
             ]);
+
+            event(new SubscriptionCreated(
+                userId: $userId,
+                planId: $planId,
+                expiresAt: $subscription->expiresAt()
+            ));
         }
 
         return $subscription;  

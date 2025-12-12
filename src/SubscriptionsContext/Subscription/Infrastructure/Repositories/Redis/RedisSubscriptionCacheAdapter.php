@@ -13,7 +13,7 @@ final class RedisSubscriptionCacheAdapter implements SubscriptionCachePort
 {
     public function save(int $userId, array $subscriptionData): void
     {
-        $ttl = 60 * 5;
+        $ttl = 60 * 60 * 24;
 
         Redis::setex(
             "user:$userId:subscription",
