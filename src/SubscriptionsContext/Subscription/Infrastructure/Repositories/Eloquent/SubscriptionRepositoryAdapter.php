@@ -8,10 +8,14 @@ use Src\SubscriptionsContext\Subscription\Domain\Repositories\SubscriptionReposi
 use Src\SubscriptionsContext\Subscription\Domain\Subscription;
 use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\SubscriptionStore;
 
+use App\Models\Subscription as SubscriptionModel;
+
 final class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
 {
     public function store(SubscriptionStore $subscriptionStore): Subscription
     {
-        return new Subscription($subscriptionStore->value());
+        $store = SubscriptionModel::create($subscriptionStore->handler());
+
+        return new Subscription($store->toArray(), true);
     }
 }

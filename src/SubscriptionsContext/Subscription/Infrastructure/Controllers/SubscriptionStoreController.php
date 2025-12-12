@@ -16,9 +16,9 @@ final class SubscriptionStoreController extends CustomController
 
     public function __invoke(Request $request): array
     {
-        dd($this->subscriptionStoreUseCase->__invoke(
+        return $this->subscriptionStoreUseCase->__invoke(
             $request->get('user_id'),
             $request->get('plan_id')
-        ));
+        )->entity();
     }
 }

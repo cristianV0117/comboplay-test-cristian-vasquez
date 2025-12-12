@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Src\SubscriptionsContext\Subscription\Application\Store;
 
 use Src\SubscriptionsContext\Subscription\Domain\Repositories\SubscriptionRepositoryPort;
+use Src\SubscriptionsContext\Subscription\Domain\Subscription;
 use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\SubscriptionStore;
 
 final class SubscriptionStoreUseCase
@@ -17,11 +18,17 @@ final class SubscriptionStoreUseCase
     public function __invoke(
         int $userId,
         int $planId 
-    )
+    ): Subscription
     {
-        return $this->subscriptionRepositoryPort->store(new SubscriptionStore([
+        $subscriptionStore = $this->subscriptionRepositoryPort->store(new SubscriptionStore([
             'userId' => $userId,
             'planId' => $planId
         ]));
+
+        if ($subscriptionStore) {
+            
+        }
+
+        return $subscriptionStore;  
     }
 }
