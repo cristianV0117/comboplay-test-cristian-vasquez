@@ -125,6 +125,8 @@ Consulta el estado de suscripción de un usuario.
 
 ### Estructura del Proyecto
 
+#### La aplicacion inicia desde el directorio **SRC** esto para desacoplar nuestro codigo del framework y solo tener dependencias en nuestra capa de infraestrcutura. Adentro de src tenemos dos contextos de dominio **shared (nuestro contexto con funcionalidad o codigo compartido)** y **SubscriptionContext (nuestro contexto de dominio principal)** ###
+
 ```
 src/SubscriptionsContext/Subscription/
 ├── Domain/                          # Capa de Dominio (Lógica de Negocio)
