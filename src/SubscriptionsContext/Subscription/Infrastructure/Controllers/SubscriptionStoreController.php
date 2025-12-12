@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Src\SubscriptionsContext\Subscription\Infrastructure\Controllers;
 
-use Illuminate\Http\Request;
+use Src\SubscriptionsContext\Subscription\Infrastructure\Requests\SubscriptionStoreRequest;
 use Src\Shared\Infrastructure\Controllers\CustomController;
 use Src\SubscriptionsContext\Subscription\Application\Store\SubscriptionStoreUseCase;
 use Src\SubscriptionsContext\Subscription\Infrastructure\Outputs\SubscriptionOutput;
@@ -19,13 +19,14 @@ final class SubscriptionStoreController extends CustomController
     )
     {}
 
-    public function __invoke(Request $request): mixed
+    public function __invoke(SubscriptionStoreRequest $request): mixed
     {
         try {
+            $validated = $request->validated();
 
             $this->subscriptionStoreUseCase->__invoke(
-                userId: $request->get('user_id'),
-                planId: $request->get('plan_id')
+                userId: (int) $validated['user_id'],
+                planId: (int) $validated['plan_id']
             );
         
             $output = $this->subscriptionOutput->output(

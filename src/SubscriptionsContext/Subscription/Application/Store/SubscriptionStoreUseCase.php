@@ -10,6 +10,8 @@ use Src\SubscriptionsContext\Subscription\Domain\Repositories\{
 };
 use Src\SubscriptionsContext\Subscription\Domain\Subscription;
 use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\SubscriptionStore;
+use Src\SubscriptionsContext\Subscription\Domain\Events\SubscriptionCreated;
+use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\SubscriptionStoreCache;
 
 final class SubscriptionStoreUseCase
 {
@@ -29,11 +31,18 @@ final class SubscriptionStoreUseCase
             'planId' => $planId
         ]));
 
-        if ($subscription) {
-            $this->cache->save(userId: $userId, subscriptionData: [
+        if ($subscription->transactionStatus()) {
+            $this->cache->save(subscriptionStoreCache: new SubscriptionStoreCache(value: [
+                'user_id' => $userId,
                 'plan_id' => $planId,
                 'expires_at' => $subscription->expiresAt()
-            ]);
+            ]));
+
+            event(new SubscriptionCreated(
+                userId: $userId,
+                planId: $planId,
+                expiresAt: $subscription->expiresAt()
+            ));
         }
 
         return $subscription;  
