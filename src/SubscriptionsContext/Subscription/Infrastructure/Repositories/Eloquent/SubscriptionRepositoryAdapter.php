@@ -12,10 +12,10 @@ use App\Models\Subscription as SubscriptionModel;
 
 final class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
 {
-    public function store(SubscriptionStore $subscriptionStore): Subscription
+    public function store(SubscriptionStore $store): Subscription
     {
-        $store = SubscriptionModel::create($subscriptionStore->handler());
+        $store = SubscriptionModel::create(attributes: $store->handler());
 
-        return new Subscription($store->toArray(), true);
+        return new Subscription(entity: $store->toArray(), transactionStatus: true);
     }
 }

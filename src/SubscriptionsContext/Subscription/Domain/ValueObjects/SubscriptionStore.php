@@ -15,7 +15,7 @@ final class SubscriptionStore extends ValueObject
             'user_id' => $this->value()['userId'],
             'plan_id' => $this->value()['planId'],
             'starts_at' => new DateTimeImmutable(), 
-            'expires_at' => now()->addDays(self::DEFAULT_EXPIRES_AT)
+            'expires_at' => now()->addDays(value: self::DEFAULT_EXPIRES_AT)
         ];
     }
 }

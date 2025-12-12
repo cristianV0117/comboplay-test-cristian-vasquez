@@ -11,7 +11,7 @@ final class Subscription extends Domain
 
     public function __construct(mixed $entity = null, bool $transactionStatus)
     {
-        parent::__construct($entity);
+        parent::__construct(entity: $entity);
 
         $this->transactionStatus = $transactionStatus;
     }
@@ -19,5 +19,25 @@ final class Subscription extends Domain
     public function transactionStatus(): bool
     {
         return $this->transactionStatus;
+    }
+
+    public function userId(): int
+    {
+        return $this->entity()["user_id"];
+    }
+
+    public function planId(): int
+    {
+        return $this->entity()["plan_id"];
+    }
+
+    public function status(): string
+    {
+        return $this->entity()["status"];
+    }
+
+    public function expiresAt(): string
+    {
+        return $this->entity()["expires_at"];
     }
 }
