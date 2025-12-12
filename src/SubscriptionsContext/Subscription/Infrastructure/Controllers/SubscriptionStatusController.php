@@ -38,7 +38,7 @@ final class SubscriptionStatusController extends CustomController
 
             return response()->json(
                 data: $output,
-                status: 201
+                status: 200
             );
         } catch (Exception $exception) {
             return response()->json(

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Src\SubscriptionsContext\Subscription\Domain;
 
 use Illuminate\Support\Carbon;
@@ -7,8 +9,7 @@ use Src\Shared\Domain\Domain;
 
 final class Subscription extends Domain
 {
-
-    private int $transactionStatus;
+    private bool $transactionStatus;
 
     public function __construct(mixed $entity = null, bool $transactionStatus)
     {
