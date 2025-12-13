@@ -8,7 +8,10 @@ use Src\SubscriptionsContext\Subscription\Domain\Repositories\SubscriptionReposi
 use Src\SubscriptionsContext\Subscription\Domain\Subscription;
 use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\SubscriptionStore;
 
-use App\Models\Subscription as SubscriptionModel;
+use App\Models\{
+    Subscription as SubscriptionModel,
+    Plan
+};
 use Src\SubscriptionsContext\Subscription\Domain\Exceptions\SubscriptionStoreFailedException;
 use Src\SubscriptionsContext\Subscription\Domain\ValueObjects\UserId;
 
@@ -29,8 +32,20 @@ final class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
             );
         }
 
+        $plan = Plan::find($data['plan_id']);
+
+        if (!$plan) {
+            throw new SubscriptionStoreFailedException(
+                message: "El plan no existe",
+                code: 404
+            );
+        }
+
+        $data['expires_at'] = now()->addDays($plan->duration_days);
+
         try {
             $subscription = SubscriptionModel::create($data);
+            $subscription->load(['user', 'plan']);
         } catch (\Throwable $e) {
             throw new SubscriptionStoreFailedException(
                 message: "Ha ocurrido un error guardando la suscripción",
@@ -47,7 +62,17 @@ final class SubscriptionRepositoryAdapter implements SubscriptionRepositoryPort
         }
 
         return new Subscription(
-            entity: $subscription->toArray(),
+            entity: [
+                'id' => $subscription->id,
+                'user_id' => $subscription->user_id,
+                'plan_id' => $subscription->plan_id,
+                'starts_at' => $subscription->starts_at,
+                'expires_at' => $subscription->expires_at,
+                'user_name' => $subscription->user->name,
+                'plan_name' => $subscription->plan->name,
+                'plan_price' => $subscription->plan->price,
+                'duration_days' => $subscription->plan->duration_days,
+            ],
             transactionStatus: true
         );
     }
