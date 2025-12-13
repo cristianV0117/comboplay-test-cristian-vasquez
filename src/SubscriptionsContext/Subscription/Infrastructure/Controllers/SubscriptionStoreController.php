@@ -24,14 +24,14 @@ final class SubscriptionStoreController extends CustomController
         try {
             $validated = $request->validated();
 
-            $this->subscriptionStoreUseCase->__invoke(
+            $subscription = $this->subscriptionStoreUseCase->__invoke(
                 userId: (int) $validated['user_id'],
                 planId: (int) $validated['plan_id']
             );
         
             $output = $this->subscriptionOutput->output(
                 path: $request->path(),
-                response: "Se ha guardado la subscripción",
+                response: "¡Se ha suscrito al plan {$subscription->planName()} correctamente!",
                 error: null
             );
         

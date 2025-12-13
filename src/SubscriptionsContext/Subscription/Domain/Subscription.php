@@ -40,24 +40,38 @@ final class Subscription extends Domain
 
     public function expiresAt(): string
     {
-        return $this->entity()["expires_at"];
+        return Carbon::parse($this->entity()["expires_at"])->toISOString();
+    }
+
+    public function userName(): string
+    {
+        return $this->entity()["user_name"];
+    }
+
+    public function planName(): string
+    {
+        return $this->entity()["plan_name"];
+    }
+
+    public function durationDays(): int
+    {
+        return $this->entity()["duration_days"];
     }
 
     public function subscriptionStatus()
     {
+        $response = [
+            "plan_id" => $this->entity()["plan_id"],
+            "expires_at" => $this->entity()["expires_at"]
+        ];
+
         if (!$this->ensureIsActive()) {
-            return [
-                "active" => "Su subscripcion esta inactiva",
-                "plan_id" => $this->entity()["plan_id"],
-                "expires_at" => $this->entity()["expires_at"],
-            ];
+            $response["active"] = "Su subscripcion no está activa";
         } else {
-            return [
-                "active" => "Su subscripcion esta activa",
-                "plan_id" => $this->entity()["plan_id"],
-                "expires_at" => $this->entity()["expires_at"],
-            ];
+            $response["active"] = "Su subscripcion está activa";
         }
+
+        return $response;
     }
 
     private  function ensureIsActive(): bool
