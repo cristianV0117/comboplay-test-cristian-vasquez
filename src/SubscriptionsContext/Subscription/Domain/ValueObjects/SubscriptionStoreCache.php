@@ -23,6 +23,6 @@ final class SubscriptionStoreCache extends ValueObject
 
     public function ttl(): int
     {
-        return 60 * 60 * 24;
+        return 60 * 60;
     }
 }
