@@ -27,12 +27,12 @@ A continuación explico el enfoque utilizado para resolver el challenge paso a p
 **Modelo de Datos:**
 - **3 tablas principales**: `subscriptions`, `users`, `plans`
 - Cada suscripción está asociada a un usuario y un plan específico
-- **Reglas de negocio**: La fecha de expiración se calcula automáticamente (10 días después de la creación)
+- **Reglas de negocio**: La fecha de expiración se calcula automáticamente con la duracion de días que tiene el plan
 - El sistema valida si la suscripción está activa comparando la fecha de expiración con la fecha actual
 
 **Estrategia de Caché:**
 - Implementación de **Cache-Aside Pattern** con Redis
-- TTL de 24 horas para reducir significativamente las consultas a MySQL
+- Ya que el sistema será usado por millones de usuarios y cada usuario puede consultar mas de una vez en el dia se usa el TTL de 1 hora para reducir significativamente las consultas a MySQL
 - Evita cuellos de botella en la base de datos principal durante picos de tráfico
 
 **Procesos Asíncronos:**
@@ -81,7 +81,7 @@ Crea una nueva suscripción para un usuario.
 ```json
 {
     "path": "/api/subscriptions",
-    "response": "Se ha guardado la subscripción",
+    "response": "¡Se ha suscrito al plan Basic Plan correctamente!",
     "error": null
 }
 ```
@@ -251,7 +251,7 @@ Almacena los jobs asíncronos pendientes de procesar (email, auditoría).
 
 **Estructura de claves:**
 - `user:{userId}:subscription` → Datos de suscripción en formato JSON
-- TTL: 24 horas
+- TTL: 1 hora
 - Prefijo automático: `laravel-database-` (configurable)
 
 **Uso:**
